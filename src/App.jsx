@@ -1,31 +1,30 @@
-import { useState } from 'react'
-import './App.css'
+import { useState, useEffect } from 'react'
+import CountryCard from './CountryCard'
 
 function App() {
-  const [count, setCount] = useState(0) // hook - état initial
+  //      variable   setter        état initial
+  const [countries, setCountries] = useState([]) // liste des pays
+  const [region, setRegion] = useState("Europe") // région sélectionnée
+
+  // API restcountries
+  useEffect(() => {
+    fetch(`https://restcountries.com/v3.1/region/${region}`)  // va chercher les données de l'API
+    .then((response) => response.json())  // conversion des données en JSON
+    .then((data) => setCountries(data))   // la variable countries récupère le tableau de données
+  }, [region])
 
   return (
     <>  {/* fragment */}
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>COMPTEUR</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          nombre de clics: {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    {/* {
+      countries.map((country) =>
+      (<h2 className='text-light' key={country.cca2}> {country.name.common} </h2> ))  // each child in a list should have a unique "key" property
+    } */}
+    <div className="row gap-4 text-center justify-content-center">
+      {
+        countries.map((country) => (
+        <CountryCard key={country.cca2} country={country} />))
+      }
+    </div>
     </>
   )
 }
